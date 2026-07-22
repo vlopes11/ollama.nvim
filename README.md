@@ -19,18 +19,12 @@ With [lazy.nvim](https://github.com/folke/lazy.nvim):
     endpoint = "http://localhost:11434/api/generate",
     actions = {
       copyedit = function()
-        local selection = vim.fn.getregion(
-          vim.fn.getpos("v"),
-          vim.fn.getpos("."),
-          { type = vim.fn.mode() }
-        )
-
         ---@type OllamaRequest
         local request = {
           model = "gemma4:31b",
           system =
           [[You are a strict, minimalist copyeditor. Your ONLY job is to fix objective errors in grammar, syntax, spelling, and punctuation. Do NOT alter the authors voice, tone, vocabulary, or sentence structure unless it is grammatically broken. If a sentence is already correct, leave it completely untouched. Output ONLY the corrected text and absolutely nothing else. No explanations, no markdown formatting, no conversation.]],
-          prompt = table.concat(selection, "\n"),
+          prompt = require("ollama.helpers").get_visual_selection(),
         }
 
         return request
